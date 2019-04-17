@@ -4,9 +4,9 @@ var x = canvas.width/2;
 var y = canvas.height-30;
 var dx = 2; // direction balle //
 var dy = -2; // vitesse balle //
-var ballRadius = 10; // rayon de la balle //
+var ballRadius = 8; // rayon de la balle //
 var paddleHeight = 10;
-var paddleWidth = 55;
+var paddleWidth = 85;
 var paddleX = (canvas.width-paddleWidth)/2; // point de départ //
 var rightPressed = false; // touches claviers pour le paddle //
 var leftPressed = false;
@@ -19,6 +19,7 @@ var brickOffsetTop = 20; //hauteur des briques //
 var brickOffsetLeft = 30;
 var gameOverNotify = document.querySelector('.game-over-notify');
 var interval;
+var score = 0;
 
 var bricks = [];
 for(var c=0; c<brickColumnCount; c++) {
@@ -61,10 +62,22 @@ function collisionDetection() {
         if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
           dy = -dy;
           b.status = 0;
+          score++;
+          if(score == brickRowCount*brickColumnCount) {
+            alert("TU AS GAGNÉ, BRAVO!");
+            document.location.reload();
+            clearInterval(interval);
+          }
         }
       }
     }
   }
+}
+
+function drawScore() {
+  ctx.font = "15px Arial";
+  ctx.fillStyle = "blue";
+  ctx.fillText("Score: "+score, 8, 200);
 }
 
 function drawBall() {
@@ -106,6 +119,7 @@ function draw() {
   drawBricks();
   drawBall();
   drawPaddle();
+  drawScore();
   collisionDetection();
 // def délimitation zones haut et bas //
   if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
